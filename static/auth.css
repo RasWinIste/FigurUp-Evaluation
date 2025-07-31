@@ -1,0 +1,31 @@
+.auth-container { display: flex; align-items: center; justify-content: center; padding: 3rem; }
+
+.auth-box { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%; max-width: 400px; min-width: 40rem; height: auto; }
+.auth-box h1 { text-align: center; margin-bottom: 1.1rem; margin-top: 0; font-size: 2rem; color: #3876b8; text-decoration: none; }
+.auth-box h3 { margin-top: 0; margin-bottom: .5rem; color: #2b5d91; text-decoration: none; }
+.auth-box h2 { margin-top: 0; margin-bottom: .5rem; color: #224a73; text-decoration: none; }
+.auth-box form { display: flex; flex-direction: column; }
+.auth-box label { margin-bottom: 0.5rem; font-weight: 500; }
+.auth-box input { padding: 0.6rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; }
+.auth-box button:not(.switch-btn) { padding: 0.5rem; background-color: #3876b8; color: white; border: none;
+                                    border-radius: 4px; font-weight: bold; font-size: 1rem; cursor: pointer;
+                                    transition: background-color 0.2s ease; }
+.auth-box button:not(.switch-btn):hover { background-color: #0056b3; }
+
+.fields { display: flex; gap: 1rem; }
+.fields .field { flex: 1; display: flex; flex-direction: column; }
+
+.form-switch-wrapper { margin: -1.5rem -1.5rem 1rem; border-radius: 8px 0 0 0; overflow: hidden; }
+.form-switch-bar { display: flex; width: 100%; background-color: #f0f0f0; }
+
+.switch-btn { flex: 1; padding: 0.5rem 1rem; border: none; background-color: #e4e4e4; color: #555; font-weight: 500;
+              font-size: 1.2rem; cursor: pointer; transition: background-color 0.3s, color 0.3s; text-decoration: none;
+              text-align: center; }
+.switch-btn.active { background-color: rgba(27, 27, 28, 0.58); color: white; }
+.switch-btn:last-child { border-top-right-radius: 8px; }
+
+.form-type { display: none; }
+.form-type.active-form { display: block; }
+
+.flash { padding: 1rem 0; font-weight: 500; color: #721c24; }

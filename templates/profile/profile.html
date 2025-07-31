@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="profile-container">
+        <div class="profile-box">
+            <div class="history-button-container">
+                <a href="{{ url_for('profile.history') }}" class="btn edit-btn">Mes locations</a>
+            </div>
+            <div class="edit-button-container">
+                <a href="{{ url_for('profile.update') }}" class="btn edit-btn">Modifier</a>
+            </div>
+
+            {% if client.prive %}
+                <h2>{{ client.prive.firstname }} {{ client.prive.lastname }}</h2>
+                <p>{{ client.mail }}</p>
+                <p>{{ client.prive.phone }}</p>
+                <p>{{ client.adresse.street }} {{ client.adresse.number }}, {{ client.adresse.city }} {{ client.adresse.postalCode }}, {{ client.adresse.country }}</p>
+            {% elif client.professionnel %}
+                <h2>{{ client.professionnel.name }}</h2>
+                <p>{{ client.professionnel.tva }}</p>
+                <p>{{ client.adresse.street }} {{ client.adresse.number }}, {{ client.adresse.city }} {{ client.adresse.postalCode }}, {{ client.adresse.country }}</p>
+                <h3>Personne de contact</h3>
+                <p>{{ client.professionnel.firstname }} {{ client.professionnel.lastname }}</p>
+                <p>{{ client.mail }}</p>
+                <p>{{ client.professionnel.phone }}</p>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('profile.unsubscribe') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir vous désinscrire ? Cette action est irréversible.')">
+                <button type="submit" class="btn delete-btn">Se désinscrire</button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=FigurUp
+      - TZ=Europe/Paris
+    volumes:
+      - "./bd.sql:/docker-entrypoint-initdb.d/1.sql"
+      - "/etc/localtime:/etc/localtime:ro"

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Figur'Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+        </div>
+        <a href="/" class="logo">Figur'Up</a>
+        <div class="nav-links">
+            {% if not request.path.startswith('/technicien') %}
+                {% if request.path != '/inscription' and g.client is none %}
+                    <a href="/inscription">Inscription</a>
+                {% endif %}
+                {% if request.path != '/connexion' and g.client is none %}
+                    <a href="/connexion">Connexion</a>
+                {% endif %}
+                {% if g.client is not none %}
+                    <a href="/location">Panier {{ cards|length }}</a>
+                {% endif %}
+                {% if g.client is not none %}
+                    <a href="/profil">Profil</a>
+                {% endif %}
+                {% if g.client is not none %}
+                    <a href="/logout">Se déconnecter</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </nav>
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>

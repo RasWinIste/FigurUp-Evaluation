@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="form-switch-wrapper">
+            <div class="form-switch-bar">
+                <a href="{{ url_for('auth.signin', type='particulier') }}" class="switch-btn {% if form_type == 'particulier' %}active{% endif %}">Particulier</a>
+                <a href="{{ url_for('auth.signin', type='professionnel') }}" class="switch-btn {% if form_type == 'professionnel' %}active{% endif %}">Professionnel</a>
+            </div>
+        </div>
+
+        <h1>Inscription</h1>
+
+        {% if form_type == 'particulier' %}
+            <form method="post" id="form-particulier" class="form-type">
+                <div class="fields">
+                    <div class="field">
+                        <label for="firstname">Prénom</label>
+                        <input type="text" id="firstname" name="firstname" value="{{ form_data.firstname if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="lastname">Nom</label>
+                        <input type="text" id="lastname" name="lastname" value="{{ form_data.lastname if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="mail">Adresse mail</label>
+                        <input type="email" id="mail" name="mail" value="{{ form_data.mail if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" value="{{ form_data.phone if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" value="{{ form_data.password if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <h3>Adresse</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label for="street">Rue</label>
+                        <input type="text" id="street" name="street" value="{{ form_data.street if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="number">Numéro</label>
+                        <input type="text" id="number" name="number" value="{{ form_data.number if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="city">Ville</label>
+                        <input type="text" id="city" name="city" value="{{ form_data.city if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="postalCode">Code postal</label>
+                        <input type="number" id="postalCode" name="postalCode" value="{{ form_data.postalCode if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="country">Pays</label>
+                        <input type="text" id="country" name="country" value="{{ form_data.country if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <button type="submit">S'inscrire</button>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+        {% elif form_type == 'professionnel' %}
+            <form method="post" id="form-professionnel" class="form-type">
+                <h3>Personne de contact</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label for="firstname">Prénom</label>
+                        <input type="text" id="firstname" name="firstname" value="{{ form_data.firstname if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="lastname">Nom</label>
+                        <input type="text" id="lastname" name="lastname" value="{{ form_data.lastname if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="mail">Adresse mail</label>
+                        <input type="email" id="mail" name="mail" value="{{ form_data.mail if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" value="{{ form_data.phone if form_data else '' }}" required>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="field">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" value="{{ form_data.password if form_data else '' }}" required>
+                    </div>
+                </div>
+                <h2>Entreprise</h2>
+                <div class="fields">
+                    <div class="field">
+                        <label for="name">Nom</label>
+                        <input type="text" id="name" name="name" value="{{ form_data.name if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="tva">Numéro de TVA</label>
+                        <input type="text" id="tva" name="tva" value="{{ form_data.tva if form_data else '' }}" required>
+                    </div>
+                </div>
+                <h3>Adresse</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label for="street">Rue</label>
+                        <input type="text" id="street" name="street" value="{{ form_data.street if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="number">Numéro</label>
+                        <input type="text" id="number" name="number" value="{{ form_data.number if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="city">Ville</label>
+                        <input type="text" id="city" name="city" value="{{ form_data.city if form_data else '' }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="postalCode">Code postal</label>
+                        <input type="number" id="postalCode" name="postalCode" value="{{ form_data.postalCode if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="country">Pays</label>
+                        <input type="text" id="country" name="country" value="{{ form_data.country if form_data else '' }}" required>
+                    </div>
+                </div>
+                <button type="submit">S'inscrire</button>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        {% endif %}
+    </div>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('deleted') === 'true') {
+            alert("Votre compte a bien été supprimé.");
+        }
+    });
+</script>
+{% endblock %}

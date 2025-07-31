@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='figuration.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="table-wrapper">
+        <h1>Vos locations</h1>
+        {% if figurations %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Prix</th>
+                        <th>Figuration(s) louée(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in figurations %}
+                        <tr>
+                            <td>{{ f.date_heure.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>{{ f.date_fin.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>{{ '%.2f' % f.tarif_heure }} * {{ '%.2f' % f.duree }} = {{ '%.2f' % f.prix }}</td>
+                            <td>{{ f.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="empty-message">Aucune location.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='figuration.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="table-wrapper">
+        <h1>Gestion des batteries des animatroniques</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Identifiant</th>
+                    <th>Nom</th>
+                    <th>Date du prochain entretien</th>
+                    <th>Pourcentage restant de batterie</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in fig_animatroniques %}
+                        <tr>
+                            <td>{{ f.id }}</td>
+                            <td>{{ f.nom }}</td>
+                            <td>{{ f.animatronique.date_prochain_entretien.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>
+                                <span class="battery-display">
+                                    {{ f.animatronique.niveau_batterie }} %
+                                    <button class="edit-battery-btn" data-id="{{ f.animatronique.id }}" title="Modifier" aria-label="Modifier le pourcentage de batterie">
+                                        <img src="{{ url_for('static', filename='icons/edit_pencil.png') }}" alt="Modifier" />
+                                    </button>
+                                </span>
+                                <form class="battery-edit-form" data-id="{{ f.animatronique.id }}" style="display: none;">
+                                    <input type="number" name="niveau_batterie" min="0" max="100" required value="{{ f.animatronique.niveau_batterie }}">
+                                </form>
+                            </td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.querySelectorAll('.edit-battery-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                const display = document.querySelector(`.battery-display button[data-id="${id}"]`).parentElement;
+                const form = document.querySelector(`.battery-edit-form[data-id="${id}"]`);
+
+                display.style.display = 'none';
+                form.style.display = 'inline';
+                form.querySelector('input').focus();
+            });
+        });
+
+        document.querySelectorAll('.battery-edit-form').forEach(form => {
+            form.addEventListener('keydown', async e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const input = form.querySelector('input');
+                    const id = form.dataset.id;
+                    const value = input.value;
+
+                    const response = await fetch(`/technicien/batterie/update/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ niveau_batterie: value })
+                    });
+
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Erreur lors de la mise à jour.");
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

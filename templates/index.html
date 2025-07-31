@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='figuration.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="table-wrapper">
+        <h1>Liste des Figurations existantes</h1>
+        {% if figurations %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Taille (cm)</th>
+                        <th>Tarif (€/h)</th>
+                        <th>Caution (€)</th>
+                        <th>Taille réelle (cm)</th>
+                        <th>Type</th>
+                        <th>Version</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Nationalité</th>
+                        <th>Domaine</th>
+                        <th>Créateur</th>
+                        <th>Univers</th>
+                        <th>Classe biologique</th>
+                        <th>Habitat</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in figurations %}
+                        <tr>
+                            <td>{{ f.taille }}</td>
+                            <td>{{ f.tarif_heure }}</td>
+                            <td>{{ f.caution }}</td>
+
+                            {% if f.celebrite is not none %}
+                            <td>{{ f.celebrite.taille_reelle }}</td>
+                                <td>Célébrité</td>
+                                {% if f.type == 'A' %}
+                                    <td>Animatronique</td>
+                                {% elif f.type == 'S' %}
+                                    <td>Statique</td>
+                                {% else %}
+                                    <td>Autre</td>
+                                {% endif %}
+                                <td>{{ f.celebrite.prenom }}</td>
+                                <td>{{ f.celebrite.nom }}</td>
+                                <td>{{ f.celebrite.nationalite }}</td>
+                                <td>{{ f.celebrite.domaine }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                            {% elif f.fictif is not none %}
+                                <td>{{ f.fictif.taille_reelle }}</td>
+                                <td>Fictif</td>
+                                {% if f.type == 'A' %}
+                                    <td>Animatronique</td>
+                                {% elif f.type == 'S' %}
+                                    <td>Statique</td>
+                                {% else %}
+                                    <td>Autre</td>
+                                {% endif %}
+                                <td>{{ "" }}</td>
+                                <td>{{ f.fictif.nom }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ f.fictif.createur }}</td>
+                                <td>{{ f.fictif.univers }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                            {% elif f.animal is not none %}
+                                <td>{{ f.animal.taille_reelle }}</td>
+                                <td>Animal</td>
+                                {% if f.type == 'A' %}
+                                    <td>Animatronique</td>
+                                {% elif f.type == 'S' %}
+                                    <td>Statique</td>
+                                {% else %}
+                                    <td>Autre</td>
+                                {% endif %}
+                                <td>{{ "" }}</td>
+                                <td>{{ f.animal.nom }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ "" }}</td>
+                                <td>{{ f.animal.classe_bio }}</td>
+                                <td>{{ f.animal.habitat }}</td>
+                            {% else %}
+                                <td colspan="9">Type inconnu</td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ url_for('add_to_cards', fig_id=f.id) }}" class="btn edit-btn">Ajouter au panier</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="empty-message">Aucune figuration trouvée.</p>
+        {% endif %}
+    </div>
+{% endblock %}

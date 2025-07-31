@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="auth-box">
+            <h1>Location</h1>
+
+            <h2>Configurer votre location</h2>
+
+            <form method="post" id="form-location" class="form-type">
+                <h3>Jours de location</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label for="start">Date et heure de début</label>
+                        <input type="datetime-local" id="start" name="loc_start"
+                               value="{{ form_data.loc_start if form_data else defaultBegin }}" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="end">Date et heure de fin</label>
+                        <input type="datetime-local" id="end" name="loc_end"
+                               value="{{ form_data.loc_end if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <h3>Adresse</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label for="street">Rue</label>
+                        <input type="text" id="street" name="street" value="{{ form_data.street if form_data else '' }}"
+                               required>
+                    </div>
+                    <div class="field">
+                        <label for="number">Numéro</label>
+                        <input type="text" id="number" name="number" value="{{ form_data.number if form_data else '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="city">Ville</label>
+                        <input type="text" id="city" name="city" value="{{ form_data.city if form_data else '' }}"
+                               required>
+                    </div>
+                    <div class="field">
+                        <label for="postalCode">Code postal</label>
+                        <input type="number" id="postalCode" name="postalCode"
+                               value="{{ form_data.postalCode if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="country">Pays</label>
+                        <input type="text" id="country" name="country"
+                               value="{{ form_data.country if form_data else '' }}" required>
+                    </div>
+                </div>
+
+                <h2>Figurines dans le panier:</h2>
+                <ul>
+                    {% if figures %}
+                        {% for figure in figures %}
+                            {% set unavailable = figure.id in conflict %}
+                            {% if figure.celebrite %}
+                                <li>{{ figure.celebrite.prenom }} {{ figure.celebrite.nom }} -
+                                    Caution: {{ figure.caution }}€ - Prix/H: {{ figure.tarif_heure }}€/h
+                                    {% if unavailable %}
+                                        - <strong class="flash">Indisponible.</strong>
+                                    {% endif %}
+                                </li>
+                            {% elif figure.fictif %}
+                                <li>{{ figure.fictif.nom }} - Caution: {{ figure.caution }}€ -
+                                    Prix/H: {{ figure.tarif_heure }}€/h
+                                    {% if unavailable %}
+                                        - <strong class="flash">Indisponible.</strong>
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li>{{ figure.animal.nom }} - Caution: {{ figure.caution }}€ -
+                                    Prix/H: {{ figure.tarif_heure }}€/h
+                                    {% if unavailable %}
+                                        - <strong class="flash">Indisponible.</strong>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-message">Le panier est vide.</p>
+                    {% endif %}
+                </ul>
+
+                {% if figures %}
+                    <div>
+                        <h4>Prix Total estimé : <span id="prix_estime"> 0.00</span> €</h4>
+                    </div>
+                    <button type="submit">Payer</button>
+                    <a href="{{ url_for('location.empty_cards') }}" class="btn action-button">Vider le panier</a>
+                {% endif %}
+
+            </form>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <script>
+        async function updatePrix() {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+
+            if (start && end) {
+                const response = await fetch("/calcul-prix", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({start, end}),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("prix_estime").textContent = data.total.toFixed(2);
+                } else {
+                    console.error("Erreur dans la réponse serveur");
+                }
+            }
+        }
+
+        document.getElementById('start').addEventListener('change', updatePrix);
+        document.getElementById('end').addEventListener('change', updatePrix);
+    </script>
+{% endblock %}
