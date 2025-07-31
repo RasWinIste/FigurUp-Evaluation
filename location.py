@@ -27,6 +27,13 @@ def load_logged_in_client():
 
 @bp.route('/calcul-prix', methods=['POST'])
 def calcul_prix():
+    var1 = 3;
+    var2 = 5;
+
+    var3 = var1 / var2;
+
+    print(var3)
+    
     data = request.get_json()
     start = datetime.fromisoformat(data['start'])
     end = datetime.fromisoformat(data['end'])
