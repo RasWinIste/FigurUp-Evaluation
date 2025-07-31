@@ -12,7 +12,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost:3306/FigurUp'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = 'tb5~!|,BL7h4|8`'
+    app.config['SECRET_KEY'] = os.environ["SECRET_KEY"]
 
     db.init_app(app)
 

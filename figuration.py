@@ -8,6 +8,8 @@ from modelsDB.client import Client
 import uuid
 bp = Blueprint('figuration', __name__, url_prefix='/figuration')
 
+ADDING_PATH = 'figuration/adding.html'
+
 @bp.route('/add', methods=('GET', 'POST'))
 def adding():
     form_type = request.args.get('type', 'animatronique')
@@ -29,7 +31,7 @@ def adding():
         missing_fields = [field for field in required_fields if not data.get(field)]
         if missing_fields:
             flash('Tous les champs sont requis.', 'error')
-            return render_template('figuration/adding.html', form_type=form_type, form_data=data, select_type=select_type)
+            return render_template(ADDING_PATH, form_type=form_type, form_data=data, select_type=select_type)
 
         try:
             statut = db.session.execute(
@@ -144,12 +146,12 @@ def adding():
             db.session.flush()
             db.session.commit()
             session['id'] = figuration_id
-            return render_template('figuration/adding.html', form_type=form_type, form_data=data, select_type=select_type)
+            return render_template(ADDING_PATH, form_type=form_type, form_data=data, select_type=select_type)
 
         except SQLAlchemyError as e:
             db.session.rollback()
             flash("Une erreur est survenue lors de le création", "error")
             print("Erreur SQLAlchemy:", e)
-            return render_template('figuration/adding.html', form_type=form_type, form_data=data, select_type=select_type)
+            return render_template(ADDING_PATH, form_type=form_type, form_data=data, select_type=select_type)
 
-    return render_template('figuration/adding.html', form_type=form_type, select_type=select_type)
+    return render_template(ADDING_PATH, form_type=form_type, select_type=select_type)
