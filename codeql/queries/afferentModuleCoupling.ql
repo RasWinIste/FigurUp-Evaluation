@@ -10,7 +10,7 @@
 
 import python
 
-from Module m
+from ModuleMetrics m
 where
   m.inSource() and
   not m.getName().matches("%test%")
