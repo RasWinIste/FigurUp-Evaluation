@@ -8,5 +8,5 @@ class Adresse(db.Model):
     street = db.Column('Rue', db.String(255), nullable=False)
     number = db.Column('Numero', db.String(255), nullable=False)
     city = db.Column('Localite', db.String(255), nullable=False)
-    postalCode = db.Column('Code_postal', db.Numeric(5,0), nullable=False)
+    postal_code = db.Column('Code_postal', db.Numeric(5, 0), nullable=False)
     country = db.Column('Pays', db.String(255), nullable=False)
