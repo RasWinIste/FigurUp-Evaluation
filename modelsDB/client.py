@@ -8,20 +8,32 @@ class Client(db.Model):
     mail = db.Column('Mail', db.String(255), nullable=False)
     password = db.Column('Mot_de_passe', db.String(255), nullable=False)
     id_adresse = db.Column('ID_Adresse', db.String(36), db.ForeignKey('ADRESSE.ID_Adresse'), nullable=False)
+
     professionnel_id = db.Column('PROFESSIONNEL', db.String(255), nullable=True)
     prive_id = db.Column('PRIVE', db.String(255), nullable=True)
 
-    professionnel = db.relationship(
-        "Professionnel", back_populates="client", uselist=False,
-        cascade="all, delete-orphan", single_parent=True
-    )
-    prive = db.relationship(
-        "Prive", back_populates="client", uselist=False,
-        cascade="all, delete-orphan", single_parent=True
-    )
     adresse = db.relationship(
-        "Adresse", backref="clients", uselist=False,
-        passive_deletes=True, single_parent=True
+        "Adresse",
+        backref="clients",
+        uselist=False,
+        passive_deletes=True,
+        single_parent=True
+    )
+
+    professionnel = db.relationship(
+        "Professionnel",
+        back_populates="client",
+        uselist=False,
+        cascade="all, delete-orphan",
+        single_parent=True
+    )
+
+    prive = db.relationship(
+        "Prive",
+        back_populates="client",
+        uselist=False,
+        cascade="all, delete-orphan",
+        single_parent=True
     )
 
 
@@ -46,6 +58,3 @@ class Prive(db.Model):
     phone = db.Column('Telephone', db.String(255), nullable=False)
 
     client = db.relationship("Client", back_populates="prive")
-
-
-
