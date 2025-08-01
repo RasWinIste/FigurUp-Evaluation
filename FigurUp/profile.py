@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, g, flash, request, session, redire
 from sqlalchemy.exc import SQLAlchemyError
 from modelsDB.figuration import Figuration, Compose, Location
 
-from auth import login_required
+from FigurUp.auth import login_required
 from init_db import db
 
 bp = Blueprint('profile', __name__, url_prefix='/profil')

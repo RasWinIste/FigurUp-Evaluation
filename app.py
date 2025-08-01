@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for
 import os
 import pymysql
 
-from auth import login_required
+from FigurUp.auth import login_required
 from init_db import db
 from modelsDB.figuration import Figuration
 
@@ -12,15 +12,15 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost:3306/FigurUp'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = 'tb5~!|,BL7h4|8`'
+    app.config['SECRET_KEY'] = 'aaaaa' # os.environ["SECRET_KEY"]
 
     db.init_app(app)
 
-    from auth import bp
-    from profile import bp as profile
-    from figuration import bp as fig
-    from location import bp as location
-    from technician import bp as tech
+    from FigurUp.auth import bp
+    from FigurUp.profile import bp as profile
+    from FigurUp.figuration import bp as fig
+    from FigurUp.location import bp as location
+    from FigurUp.technician import bp as tech
     app.register_blueprint(bp)
     app.register_blueprint(fig)
     app.register_blueprint(profile)

@@ -10,6 +10,8 @@ from modelsDB.client import Client, Prive, Professionnel
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
+SIGNIN_PATH = 'auth/signin.html'
+
 @bp.before_app_request
 def load_logged_in_client():
     client_id = session.get('id')
@@ -32,7 +34,7 @@ def signin():
         missing_fields = [field for field in required_fields if not data.get(field)]
         if missing_fields:
             flash('Tous les champs sont requis.', 'error')
-            return render_template('auth/signin.html', form_type=form_type, form_data=data)
+            return render_template(SIGNIN_PATH, form_type=form_type, form_data=data)
 
         try:
             adresse = Adresse(
@@ -89,9 +91,10 @@ def signin():
         except SQLAlchemyError as e:
             db.session.rollback()
             flash("Une erreur est survenue lors de l'inscription", "error")
-            return render_template('auth/signin.html', form_type=form_type, form_data=data)
+            print("Erreur SQLAlchemy:", e)
+            return render_template(SIGNIN_PATH, form_type=form_type, form_data=data)
 
-    return render_template('auth/signin.html', form_type=form_type)
+    return render_template(SIGNIN_PATH, form_type=form_type)
 
 
 @bp.route('/connexion', methods=('GET', 'POST'))

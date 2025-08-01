@@ -15,6 +15,8 @@ from modelsDB.figuration import Figuration, Location, Compose
 
 bp = Blueprint('location', __name__, url_prefix='/')
 
+TIME_FORMAT = '%Y-%m-%dT%H:%M'
+LOCATION_PATH = 'location/location.html'
 
 @bp.before_app_request
 def load_logged_in_client():
@@ -49,7 +51,7 @@ def calcul_prix():
 @bp.route('/empty_cards', methods=['GET'])
 def empty_cards():
     session['cards'] = []
-    return render_template('location/location.html', figures=[], defaultBegin=datetime.now().strftime('%Y-%m-%dT%H:%M'))
+    return render_template(LOCATION_PATH, figures=[], defaultBegin=datetime.now().strftime(TIME_FORMAT))
 
 
 @bp.route('/location', methods=('GET', 'POST'))
@@ -57,14 +59,14 @@ def location():
     cards = session.get('cards', [])
     figures = Figuration.query.filter(Figuration.id.in_(cards)).all()
 
-    now = datetime.now().strftime('%Y-%m-%dT%H:%M')
+    now = datetime.now().strftime(TIME_FORMAT)
 
     if request.method == 'POST':
         data = request.form.to_dict()
 
         if len(figures) == 0:
             flash('Le panier est vide.', 'error')
-            return render_template('location/location.html', figures=figures, form_data=data,
+            return render_template(LOCATION_PATH, figures=figures, form_data=data,
                                    defaultBegin=now)
 
         missing_fields = [field for field in
@@ -72,7 +74,7 @@ def location():
                           not data.get(field)]
         if missing_fields:
             flash('Tous les champs sont requis.', 'error')
-            return render_template('location/location.html', figures=figures, form_data=data,
+            return render_template(LOCATION_PATH, figures=figures, form_data=data,
                                    defaultBegin=now)
 
         start = datetime.fromisoformat(data['loc_start'])
@@ -81,13 +83,13 @@ def location():
 
         if start > end:
             flash("La date de début ne peut pas être avant la date de fin.", "error")
-            return render_template('location/location.html', figures=figures, defaultBegin=now, form_data=data)
+            return render_template(LOCATION_PATH, figures=figures, defaultBegin=now, form_data=data)
 
         conflict = unavailable_figure(start, end, cards)
         if conflict:
             flash("Des figurations ne sont pas disponible aux dates données.", "error")
             print(conflict)
-            return render_template('location/location.html', figures=figures, defaultBegin=now, form_data=data, conflict=conflict)
+            return render_template(LOCATION_PATH, figures=figures, defaultBegin=now, form_data=data, conflict=conflict)
 
         try:
             adresse = Adresse(
@@ -103,7 +105,7 @@ def location():
             location = Location(
                 date_heure=data['loc_start'],
                 duree=duration_hours,
-                date_paiement=datetime.now().strftime('%Y-%m-%dT%H:%M'),
+                date_paiement=datetime.now().strftime(TIME_FORMAT),
                 id_client=session.get('id'),
                 id_adresse=adresse.id
             )
@@ -130,9 +132,9 @@ def location():
             db.session.rollback()
             flash("Une erreur est survenue lors de le création", "error")
             print("Erreur SQLAlchemy:", e)
-            return render_template('location/location.html', form_data=data)
+            return render_template(LOCATION_PATH, form_data=data)
 
-    return render_template('location/location.html', figures=figures, defaultBegin=now, cards=cards)
+    return render_template(LOCATION_PATH, figures=figures, defaultBegin=now, cards=cards)
 
 def unavailable_figure(start_datetime, end_datetime, ids_figurations):
     loc_end = func.timestampadd(text('HOUR'), Location.duree, Location.date_heure)
