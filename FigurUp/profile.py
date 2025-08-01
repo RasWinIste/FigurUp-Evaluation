@@ -10,6 +10,17 @@ from init_db import db
 
 bp = Blueprint('profile', __name__, url_prefix='/profil')
 
+def get_name(): 
+    if figuration.fictif:
+        return figuration.fictif.nom
+    elif figuration.celebrite:
+        return f"{figuration.celebrite.prenom} {figuration.celebrite.nom}"
+    elif figuration.animal:
+        return figuration.animal.nom
+    else:
+        return None
+
+
 @bp.route('/')
 @login_required
 def index():
@@ -50,12 +61,9 @@ def history():
         grouped[location_id]['duree'] = duree
         grouped[location_id]['prix'] += prix
         grouped[location_id]['caution'] += float(caution)
-        nom = (
-            figuration.fictif.nom if figuration.fictif else
-            (figuration.celebrite.prenom + " " + figuration.celebrite.nom) if figuration.celebrite else
-            figuration.animal.nom if figuration.animal else
-            None
-        )
+        
+        nom = get_name(figuration)
+    
         if nom:
             grouped[location_id]['names'].append(nom)
 
