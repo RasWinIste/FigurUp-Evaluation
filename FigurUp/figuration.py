@@ -10,6 +10,26 @@ bp = Blueprint('figuration', __name__, url_prefix='/figuration')
 
 ADDING_PATH = 'figuration/adding.html'
 
+def get_required_fields(form_type, select_type):
+    required_fields = ['size', 'pricing', 'caution', 'realsize']
+    if form_type == 'animatronique':
+        required_fields += ['battery', 'repairdate']
+    if select_type == 'celebrity':
+        required_fields += ['firstname', 'name', 'nationality', 'domain']
+    elif select_type == 'fiction':
+        required_fields += ['name', 'creator', 'universe']
+    elif select_type == 'animal':
+        required_fields += ['name', 'bioclass', 'habitat']
+    
+    return required_fields
+
+def get_type_id(form_type):
+    if form_type == 'statique':
+        return 'S'
+    elif form_type == 'animatronique':
+        return 'A'
+    return ''    
+
 @bp.route('/add', methods=('GET', 'POST'))
 def adding():
     form_type = request.args.get('type', 'animatronique')
@@ -17,16 +37,8 @@ def adding():
 
     if request.method == 'POST':
         data = request.form.to_dict()
-
-        required_fields = ['size', 'pricing', 'caution', 'realsize']
-        if form_type == 'animatronique':
-            required_fields += ['battery', 'repairdate']
-        if select_type == 'celebrity':
-            required_fields += ['firstname', 'name', 'nationality', 'domain']
-        elif select_type == 'fiction':
-            required_fields += ['name', 'creator', 'universe']
-        elif select_type == 'animal':
-            required_fields += ['name', 'bioclass', 'habitat']
+        
+        required_fields = get_required_fields(form_type, select_type)
 
         missing_fields = [field for field in required_fields if not data.get(field)]
         if missing_fields:
@@ -44,11 +56,7 @@ def adding():
 
             figuration_id = str(uuid.uuid4())
 
-            fig_type = ''
-            if form_type == 'statique':
-                fig_type = 'S'
-            elif form_type == 'animatronique':
-                fig_type = 'A'
+            fig_type = get_type_id(form_type)
 
             if select_type == 'celebrity':
                 celebrity_id = str(uuid.uuid4())
